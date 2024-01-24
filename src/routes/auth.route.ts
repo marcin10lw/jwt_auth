@@ -7,8 +7,6 @@ import { createUserSchema, loginUserSchema } from "../schemas/user.schema";
 
 const router = express.Router();
 
-router.use(deserializeUser, requireUser);
-
 router.post("/register", validate(createUserSchema), registerHandler);
 router.post("/login", validate(loginUserSchema), loginHandler);
 

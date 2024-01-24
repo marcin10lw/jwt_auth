@@ -23,8 +23,8 @@ app.use(
   })
 );
 
-app.use("/api/v1/users", userRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/users", userRouter);
 
 app.get("/healthCheck", (req, res, next) => {
   res.status(200).json({
