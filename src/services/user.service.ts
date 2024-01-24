@@ -5,11 +5,11 @@ import { DocumentType } from "@typegoose/typegoose";
 import { signJwt } from "../utils/jwt";
 import config from "config";
 import redisClient from "../utils/connectRedis";
+import { excludedFields } from "../controller/auth.controller";
 
 export const createUser = async (input: Partial<User>) => {
   const user = await userModel.create(input);
-  // return omit(user.toJSON(), excludedFields)
-  return user.toJSON();
+  return omit(user.toJSON(), excludedFields);
 };
 
 export const findUserById = async (id: string) => {
