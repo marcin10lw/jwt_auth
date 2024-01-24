@@ -1,6 +1,8 @@
 import { CookieOptions, NextFunction, Request, Response } from "express";
 import config from "config";
-import { createUser } from "../services/user.service";
+import { createUser, findUser, signToken } from "../services/user.service";
+import { CreateUserInput, LoginUserInput } from "../schemas/user.schema";
+import AppError from "../utils/appError";
 
 export const excludedFields = ["password"];
 
@@ -18,7 +20,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 export const registerHandler = async (
-  req: Request,
+  req: Request<{}, {}, CreateUserInput>,
   res: Response,
   next: NextFunction
 ) => {
@@ -43,6 +45,40 @@ export const registerHandler = async (
       });
     }
 
+    next(error);
+  }
+};
+
+export const loginHandler = async (
+  req: Request<{}, {}, LoginUserInput>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = await findUser({
+      email: req.body.email,
+    });
+
+    if (
+      !user ||
+      !(await user.comparePasswords(user.password, req.body.password))
+    ) {
+      return next(new AppError("Invalid email or password", 401));
+    }
+
+    const { accessToken } = await signToken(user);
+
+    res.cookie("jwt_accessToken", accessToken, accessTokenCookieOptions);
+    res.cookie("logged_in", true, {
+      ...accessTokenCookieOptions,
+      httpOnly: false,
+    });
+
+    res.status(200).json({
+      status: "success",
+      accessToken,
+    });
+  } catch (error: any) {
     next(error);
   }
 };
