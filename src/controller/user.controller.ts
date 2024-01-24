@@ -26,6 +26,7 @@ export const getAllUsersHandler = async (
 ) => {
   try {
     const users = await findAllUsers();
+
     res.status(200).json({
       status: "success",
       result: users.length,
