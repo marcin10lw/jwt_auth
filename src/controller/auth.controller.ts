@@ -3,6 +3,7 @@ import config from "config";
 import { createUser, findUser, signToken } from "../services/user.service";
 import { CreateUserInput, LoginUserInput } from "../schemas/user.schema";
 import AppError from "../utils/appError";
+import { ACCESS_TOKEN_COOKIE_NAME } from "../constants";
 
 export const excludedFields = ["password"];
 
@@ -68,7 +69,7 @@ export const loginHandler = async (
 
     const { accessToken } = await signToken(user);
 
-    res.cookie("jwt_accessToken", accessToken, accessTokenCookieOptions);
+    res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, accessTokenCookieOptions);
     res.cookie("logged_in", true, {
       ...accessTokenCookieOptions,
       httpOnly: false,

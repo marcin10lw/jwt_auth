@@ -14,6 +14,7 @@ export const createUser = async (input: Partial<User>) => {
 
 export const findUserById = async (id: string) => {
   const user = userModel.findById(id).lean();
+  return user;
 };
 
 export const findAllUsers = async () => {
