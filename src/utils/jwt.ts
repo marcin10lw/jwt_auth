@@ -19,6 +19,7 @@ export const verifyJwt = <T>(token: string): T | null => {
       config.get<string>("accessTokenPublicKey"),
       "base64"
     ).toString("ascii");
+
     return jwt.verify(token, publicKey) as T;
   } catch (error) {
     return null;
