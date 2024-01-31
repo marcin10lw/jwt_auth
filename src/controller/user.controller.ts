@@ -8,6 +8,7 @@ export const getMeHandler = (
 ) => {
   try {
     const user = res.locals.user;
+
     res.status(200).json({
       status: "success",
       data: {
